@@ -1,0 +1,1 @@
+Kişiye ait bir kaydı olmamasına rağmen kişilerin görüntülenmesi isteniyor. O yüzden LEFT JOIN yaparak sol tarafa koyduğumuz kişilerin tamamı sağ taraftaki bilgileri boş olanlar dahil  listeye alınıyor. 
