@@ -1,4 +1,7 @@
-# 176. Second Highest Salary
+# [176. Second Highest Salary](https://leetcode.com/problems/second-highest-salary/)
+
+## Problem Description
+Find the second highest distinct salary from the `Employee` table. If there is no second highest salary, return `null`.
 
 ## Intuition
 To find the second highest salary without using procedural logic, we can leverage subqueries or sorting with offset. The maximum salary in the table represents the highest value. By filtering out this highest value, the maximum salary among the remaining records naturally becomes the second highest overall.
