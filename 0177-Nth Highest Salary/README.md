@@ -1,4 +1,7 @@
-# 177. Nth Highest Salary
+# [177. Nth Highest Salary](https://leetcode.com/problems/nth-highest-salary/)
+
+## Problem Description
+Find the $N^{\text{th}}$ highest distinct salary from the `Employee` table. If there are fewer than $N$ distinct salaries, return `null`.
 
 ## Intuition
 To find the $N^{\text{th}}$ highest distinct salary, we need to extract unique salary values from the table, sort them in descending order, and iterate through them using a counter until we reach the $N^{\text{th}}$ position.
