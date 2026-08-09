@@ -73,7 +73,7 @@ While this problem can be approached procedurally in PL/SQL by iterating over ro
   Memory is consumed for cursor row management, procedural variable storage, and output buffering.
 
 # Code
-```plsql
+```sql
 /* Write your PL/SQL query statement below */
 CREATE OR REPLACE FUNCTION get_ranked_scores
 RETURN SYS_REFCURSOR IS
