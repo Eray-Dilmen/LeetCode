@@ -1,3 +1,5 @@
+### [1. Two Sum](https://leetcode.com/problems/two-sum/)
+
 Temel Fikir:
 
 elimizde bir dolaştığımız num var. num ile bir şeyin toplamı target’a eşit mi diye bakacağız
@@ -18,3 +20,15 @@ return kısmında ‘mapping[target - num]’ demememizin nedeni o sayının ind
 çünkü sözlük içerisinde value'ya atanıyor.
 Diğerini index olarak bırakmamızın nedeni o anki sayının indeksi zaten enumerate sayesinde elimizde olduğundan doğrudan index yazıyoruz.
 
+### Code
+```python
+class Solution(object):
+    def twoSum(self, nums, target):
+        mapping = {}
+
+        for index, num in enumerate(nums): 
+            if (target - num) in mapping:
+                return [mapping[target - num], index]
+            else:
+                mapping[num] = index
+``` 
