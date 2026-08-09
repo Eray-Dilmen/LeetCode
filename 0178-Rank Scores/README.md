@@ -25,7 +25,7 @@ The standard SQL window function `DENSE_RANK()` is designed specifically for thi
 
 
 # Code
-```oraclesql
+```sql
 SELECT 
     score,
     DENSE_RANK() OVER (ORDER BY score DESC) AS rank
@@ -73,7 +73,7 @@ While this problem can be approached procedurally in PL/SQL by iterating over ro
   Memory is consumed for cursor row management, procedural variable storage, and output buffering.
 
 # Code
-```oraclesql []
+```plsql
 /* Write your PL/SQL query statement below */
 CREATE OR REPLACE FUNCTION get_ranked_scores
 RETURN SYS_REFCURSOR IS
