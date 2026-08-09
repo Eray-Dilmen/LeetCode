@@ -1,4 +1,5 @@
-# 1. DENSE_RANK() Ne İşe Yarar?
+### [178. Rank Scores](https://leetcode.com/problems/rank-scores/)
+## 1. DENSE_RANK() Ne İşe Yarar?
 
 `DENSE_RANK()`, SQL'deki **Pencere Fonksiyonları (Window Functions)** kategorisine girer. Satırları belirlediğin bir kritere göre (burada `ORDER BY score DESC`) sıralar ve her satıra bir derece verir.
 
@@ -9,7 +10,7 @@ Bu fonksiyonlar klasik `GROUP BY` gibi satırları tek bir satıra indirgemez, h
 
 ---
 
-# 2. Bu Soruda Neden Saf SQL Tercih Edilir?
+## 2. Bu Soruda Neden Saf SQL Tercih Edilir?
 
 Bu soru sadece var olan veriyi **sıralayıp etiketleme** işlemidir. SQL diline eklenen Pencere Fonksiyonları (`DENSE_RANK()`, `RANK()`, `ROW_NUMBER()`), prosedürel dillerdeki (PL/SQL) döngü ihtiyacını tamamen ortadan kaldırmak için tasarlanmıştır.
 
@@ -17,3 +18,11 @@ Bu soru sadece var olan veriyi **sıralayıp etiketleme** işlemidir. SQL diline
 * **PL/SQL (Döngü):** Satırları tek tek gezer. Küçük veride fark edilmese de büyük verisetlerinde performans kaybına yol açar.
 
 LeetCode üzerindeki bu ve benzeri SQL problemleri için pencere fonksiyonlarını (`DENSE_RANK()`) öğrenip `SELECT` yapısı içinde kullanmak tek geçerli yoldur.
+
+## Code
+```sql
+SELECT 
+    score,
+    DENSE_RANK() OVER (ORDER BY score DESC) AS rank
+FROM Scores;
+```
