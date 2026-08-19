@@ -6,7 +6,36 @@ The cancellation rate is computed by dividing the number of canceled (by client 
 ## Intuition
 To calculate the daily cancellation rate, we need to apply a mathematical formula: `(Canceled Trips) / (Total Trips)`. We can achieve this by assigning a value of `1` to canceled trips and `0` to completed trips using a `CASE` statement, and then summing them up. We also must ensure that both the client and the driver involved in the trip are not banned.
 
-## Approach: Subqueries with NOT IN
+---
+
+## Approach 1: Using JOINs (Optimal)
+
+### Explanation
+1. **Filtering Unbanned Users via JOIN:** We join the `Trips` table with the `Users` table twice—once for the client and once for the driver. By adding `AND banned = 'No'` directly into the `ON` clause, we automatically filter out any trips involving banned users.
+2. **Calculating the Rate:** We group the results by the date (`request_at`). For the numerator, we use `SUM(CASE WHEN status != 'completed' THEN 1 ELSE 0 END)` to count only canceled trips. For the denominator, we use `COUNT(*)` to get the total number of valid trips for that day.
+3. **Rounding:** We wrap the division in a `ROUND(..., 2)` function to satisfy the 2-decimal-point requirement.
+
+### Complexity
+- **Time Complexity:** $\mathcal{O}(N)$ where $N$ is the number of trips. The database engine can quickly evaluate the joins if `users_id` is indexed.
+- **Space Complexity:** $\mathcal{O}(M)$ where $M$ is the number of unique dates in the specified range (due to `GROUP BY`).
+
+### Code
+```sql
+SELECT 
+    t.request_at AS "Day",
+    ROUND(
+        SUM(CASE WHEN t.status != 'completed' THEN 1 ELSE 0 END) / COUNT(*), 
+        2
+    ) AS "Cancellation Rate"
+FROM Trips t
+JOIN Users c ON t.client_id = c.users_id AND c.banned = 'No'
+JOIN Users d ON t.driver_id = d.users_id AND d.banned = 'No'
+WHERE t.request_at BETWEEN '2013-10-01' AND '2013-10-03'
+GROUP BY t.request_at;
+```
+---
+
+## Approach 2: Subqueries with NOT IN
 
 ### Explanation
 Instead of joining the `Trips` table with the `Users` table, this approach relies on subqueries within the `WHERE` clause. 
