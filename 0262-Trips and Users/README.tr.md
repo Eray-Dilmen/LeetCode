@@ -4,9 +4,16 @@
 
 Bu problemde amacımız, banlanmamış (yasaklanmamış) müşteriler ve sürücüler arasındaki günlük sefer iptal oranını hesaplamaktır.
 
-## Çözüm: Alt Sorgu ve NOT IN ile Filtreleme
+### 1. Tabloları Bağlamak (İki Kez JOIN Etmek)
 
-### Cancellation Rate (İptal Oranı) Nasıl Hesaplanır?
+Müşteri ve sürücü iki ayrı kişi olduğu için `Users` tablosunu iki kere bağlamamız (JOIN) gerekir:
+
+*   **İlk bağlantı müşteri için:** `JOIN Users c ON t.client_id = c.users_id AND c.banned = 'No'`
+*   **İkinci bağlantı sürücü için:** `JOIN Users d ON t.driver_id = d.users_id AND d.banned = 'No'`
+
+Bu şekilde `ON` şartının içerisine `AND banned = 'No'` koşulunu ekleyerek, eşleştirme aşamasında doğrudan sadece banlanmamış kişilerin yer aldığı geçerli seferleri filtrelemiş oluruz.
+
+### 2. Cancellation Rate (İptal Oranı) Nasıl Hesaplanır?
 
 Günlük iptal oranını bulmak için `SELECT` kısmında tam olarak şu matematiksel bölme işlemini kurmamız bekleniyor:
 
@@ -19,6 +26,25 @@ Bunu SQL'de kurmanın en yaygın ve temiz yolu koşullu toplama (`SUM`) yapmakt�
 *   **Payda (Toplam Sayı):** İlgili gündeki toplam geçerli sefer sayısı için doğrudan `COUNT(*)` kullanırız.
 *   **Bölme ve Yuvarlama:** Payı paydaya bölüp sonucu sorunun istediği gibi `ROUND(..., 2)` fonksiyonuyla 2 basamağa yuvarlayarak `AS "Cancellation Rate"` şeklinde isimlendiririz. (Oracle'da sütun takma adlarında tek tırnak (`' '`) yerine çift tırnak (`" "`) kullanılması gerektiğine dikkat edilmelidir).
 
+### Code
+
+```sql
+SELECT 
+    t.request_at AS "Day",
+    ROUND(
+        SUM(CASE WHEN t.status != 'completed' THEN 1 ELSE 0 END) / COUNT(*), 
+        2
+    ) AS "Cancellation Rate"
+FROM Trips t
+JOIN Users c ON t.client_id = c.users_id AND c.banned = 'No'
+JOIN Users d ON t.driver_id = d.users_id AND d.banned = 'No'
+WHERE t.request_at BETWEEN '2013-10-01' AND '2013-10-03'
+GROUP BY t.request_at;
+```
+
+---
+
+## Alternatif Çözüm: Alt Sorgu ve NOT IN ile Filtreleme
 
 ### Çözüm Mantığı ve Yapısı
 
@@ -30,7 +56,6 @@ Tabloları eşleştirmek yerine, doğrudan `Trips` tablosunu okuyup `WHERE` şar
 *   **Sürücü Kontrolü:** `AND driver_id NOT IN (SELECT users_id FROM Users WHERE banned = 'Yes')` diyerek aynı filtrelemeyi sürücüler için de uyguluyoruz. 
 
 Bu sayede sadece banlanmamış kişilerin yer aldığı geçerli seferleri filtrelemiş oluruz.
-
 
 ### Code
 
