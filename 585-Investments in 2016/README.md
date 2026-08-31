@@ -10,7 +10,8 @@ Round `tiv_2016` to two decimal places.
 ## Intuition
 To find the correct sum, we need to filter the `Insurance` table based on two separate grouping conditions. The 2015 investments require finding duplicates, while the geographic coordinates require finding strictly unique pairs. We can achieve this by isolating the valid values in subqueries and applying them as filters to the main table.
 
-## Approach: Subqueries with IN and GROUP BY
+## Approach 1: Subqueries with IN and GROUP BY
+> **Note:** This approach is standard but less optimal. See **Approach 2** for the optimized Window Function solution.
 1. **Filter by `tiv_2015`:** Use a subquery to group the data by `tiv_2015` and filter with `HAVING COUNT(*) > 1` to find values shared by multiple policyholders.
 2. **Filter by Location:** Use a second subquery to group by the coordinate pair `(lat, lon)` and filter with `HAVING COUNT(*) = 1` to find strictly unique locations.
 3. **Sum and Round:** In the main query, sum the `tiv_2016` column for records that satisfy both subquery filters, and apply the `ROUND(..., 2)` function.
@@ -50,4 +51,48 @@ AND (lat,lon) IN (
     GROUP BY lat,lon
     HAVING COUNT(*) = 1
 );
+```
+
+---
+
+## Approach 2: Window Functions (Optimized)
+
+### Approach
+Instead of hitting the `Insurance` table multiple times with independent subqueries, we can use Window Functions (`COUNT(*) OVER(...)`) within a Common Table Expression (CTE). This allows us to calculate the duplicate counts for `tiv_2015` and the unique counts for the `(lat, lon)` locations simultaneously in a single table scan. Finally, the outer query filters the results based on these pre-calculated counts and sums the `tiv_2016` values.
+
+### Complexity
+- **Time complexity:** $O(N \log N)$ or $O(N)$
+  Depending on the engine's sorting/hashing for the window functions, it is practically much faster than Approach 1 because it requires only a single pass over the data (no multiple full table scans).
+- **Space complexity:** $O(N)$
+  To hold the CTE in memory for processing.
+
+---
+
+### Explanations & Query Logic
+
+#### 1. Why is this more optimal than Subqueries?
+Using `IN` with subqueries forces the database to evaluate the `Insurance` table three separate times: once for the main query, once for the `tiv_2015` subquery, and once for the `(lat, lon)` subquery. Window functions process the aggregations inline, requiring only one table scan. In large datasets, this drastically reduces I/O operations and execution time.
+
+#### 2. How does `COUNT(*) OVER(PARTITION BY ...)` work here?
+The `PARTITION BY` clause acts like `GROUP BY` but without collapsing the rows. 
+- `COUNT(*) OVER(PARTITION BY tiv_2015)` counts how many times that specific row's 2015 investment value appears across the whole table.
+- `COUNT(*) OVER(PARTITION BY lat, lon)` counts how many people live at that exact location.
+We assign these counts to aliases (`tiv_count` and `loc_count`) and simply filter them in the next step.
+
+---
+
+### Code
+
+```sql
+WITH CTE AS (
+    SELECT 
+        tiv_2016,
+        COUNT(*) OVER(PARTITION BY tiv_2015) AS tiv_count,
+        COUNT(*) OVER(PARTITION BY lat, lon) AS loc_count
+    FROM Insurance
+)
+SELECT ROUND(SUM(tiv_2016), 2) AS "tiv_2016"
+FROM CTE
+WHERE tiv_count > 1 
+  AND loc_count = 1;
 ```
