@@ -1,5 +1,8 @@
 ### [585. Investments in 2016](https://leetcode.com/problems/investments-in-2016/)
 
+## 1.Yaklaşım: Alt Sorgular ve IN (Subqueries with IN and GROUP BY)
+> **Not:** Bu yaklaşım standarttır ancak daha az optimaldir. Optimize edilmiş Pencere Fonksiyonu (Window Function) çözümü için **Yaklaşım 2'ye (Approach 2)** göz atın.
+
 ## Açıklamalar ve Sorgu Mantığı
 
 ### 1. Neden `lat` ve `lon` değerlerini birlikte `(lat, lon)` çifti olarak değerlendiriyoruz?
@@ -27,4 +30,36 @@ AND (lat,lon) IN (
     GROUP BY lat,lon
     HAVING COUNT(*) = 1
 );
+```
+---
+
+## 2. Yaklaşım: Window (Pencere) Fonksiyonları (Optimum)
+
+### Açıklamalar ve Sorgu Mantığı
+
+#### 1. Bu yöntem neden Alt Sorgulardan (Subqueries) daha optimum?
+Alt sorgularla `IN` operatörünü kullanmak, veritabanını `Insurance` tablosunu üç ayrı kez okumaya zorlar: biri ana sorgu için, biri `tiv_2015` alt sorgusu için ve biri de `(lat, lon)` alt sorgusu için[cite: 5]. Pencere (Window) fonksiyonları ise hesaplamaları satır içi (inline) yaparak tablonun yalnızca **tek bir kez** taranmasını (single table scan) sağlar[cite: 5]. Büyük veri setlerinde bu durum G/Ç (I/O) maliyetini ve sorgu süresini dramatik ölçüde azaltır[cite: 5].
+
+#### 2. `COUNT(*) OVER(PARTITION BY ...)` burada nasıl çalışıyor?
+`PARTITION BY` ifadesi tıpkı `GROUP BY` gibi çalışır ancak satırları tekilleştirip birleştirmez, verinin orijinal satır yapısını korur. 
+- `COUNT(*) OVER(PARTITION BY tiv_2015)`: O satırdaki 2015 yatırım değerinin tablonun tamamında toplam kaç kez geçtiğini hesaplar ve o satıra yazar.
+- `COUNT(*) OVER(PARTITION BY lat, lon)`: O spesifik konumda toplam kaç kişinin bulunduğunu hesaplar.
+Bu sayıları `tiv_count` ve `loc_count` takma adlarına (alias) atarız ve bir sonraki CTE (Common Table Expression) adımında basitçe `WHERE` ile filtreleriz.
+
+---
+
+### Code
+
+```sql
+WITH CTE AS (
+    SELECT 
+        tiv_2016,
+        COUNT(*) OVER(PARTITION BY tiv_2015) AS tiv_count,
+        COUNT(*) OVER(PARTITION BY lat, lon) AS loc_count
+    FROM Insurance
+)
+SELECT ROUND(SUM(tiv_2016), 2) AS "tiv_2016"
+FROM CTE
+WHERE tiv_count > 1 
+  AND loc_count = 1;
 ```
