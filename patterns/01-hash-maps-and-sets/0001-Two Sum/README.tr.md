@@ -1,6 +1,6 @@
 > 💡 **Not:** Bu soru **Hash Maps & Sets** kalıbı ile çözülmüştür. Kalıbın genel mantığı, kullanım senaryoları ve teorik detayları için [README.md](../README.md) dosyasına bakabilirsiniz.
 
-# 1. Two Sum
+# [1. Two Sum](https://leetcode.com/problems/two-sum/)
 
 **Problem Statement**
 You are given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.
