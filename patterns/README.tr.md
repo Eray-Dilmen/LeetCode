@@ -7,7 +7,8 @@ Bu dizin, LeetCode ve teknik mülakatlarda karşılaşılan problemleri ezberlem
 ## Neden Kalıp Tabanlı Yaklaşım?
 
 * **Tanıma Kolaylığı:** Yeni bir problemle karşılaşıldığında, problemin anahtar ipuçlarına bakarak hangi kalıbın (örneğin *Two Pointers* veya *Sliding Window*) uygulanacağını hızlıca belirlemeyi sağlar.
-* **Karmaşıklık Optimizasyonu:** Brute Force (kaba kuvvet) bir çözümden (örn. $O(n^2)$) en uygun veri yapısı veya algoritma kalıbı kullanılarak optimal sonuca (örn. $O(n)$ veya $O(\log n)$) geçiş adımlarını standartlaştırır.
+
+* **Karmaşıklık Optimizasyonu:** Brute Force (kaba kuvvet) bir çözümden (örn. `O(n²)`) en uygun veri yapısı veya algoritma kalıbı kullanılarak optimal sonuca (örn. `O(n)` veya `O(log n)`) geçiş adımlarını standartlaştırır.
 
 ---
 
