@@ -1,6 +1,6 @@
 > 💡 **Not:** Bu soru **Hash Maps & Sets** kalıbı ile çözülmüştür. Kalıbın genel mantığı, kullanım senaryoları ve teorik detayları için [README.md](../README.md) dosyasına bakabilirsiniz.
 
-# 217. Contains Duplicate
+# [217. Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)
 
 **Problem Statement**
 Given an integer array `nums`, return `true` if any value appears at least twice in the array, and return `false` if every element is distinct.
