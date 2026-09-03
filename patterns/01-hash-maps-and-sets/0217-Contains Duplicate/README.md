@@ -1,6 +1,6 @@
 > 💡 **Note:** This problem is solved using the **Hash Maps & Sets** pattern. For the general logic, use cases, and theoretical details of this pattern, refer to the [pattern README.md](../README.md).
 
-# 217. Contains Duplicate
+# [217. Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)
 
 **Problem Statement**
 Given an integer array `nums`, return `true` if any value appears at least twice in the array, and return `false` if every element is distinct.
