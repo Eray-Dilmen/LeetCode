@@ -1,6 +1,6 @@
 > 💡 **Not:** Bu soru **Hash Maps & Sets** kalıbı ile çözülmüştür. Kalıbın genel mantığı, kullanım senaryoları ve teorik detayları için [README.md](../README.md) dosyasına bakabilirsiniz.
 
-# 383. Ransom Note
+# [383. Ransom Note](https://leetcode.com/problems/ransom-note/)
 
 **Problem Statement**
 Given two strings `ransomNote` and `magazine`, return `true` if `ransomNote` can be constructed by using the letters from `magazine` and `false` otherwise.
