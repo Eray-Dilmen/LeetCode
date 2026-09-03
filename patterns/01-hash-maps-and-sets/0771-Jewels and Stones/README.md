@@ -1,94 +1,74 @@
+> 💡 **Note:** This problem is solved using the **Hash Maps & Sets** pattern. For the general logic, use cases, and theoretical details of this pattern, refer to the [pattern README.md](../README.md).[cite: 8]
+
 # 771. Jewels and Stones
 
-> 💡 **Not:** Bu soru **Hash Maps & Sets** kalıbı ile çözülmüştür. Kalıbın genel mantığı, kullanım senaryoları ve teorik detayları için [ README.md](../README.md) dosyasına bakabilirsiniz.
+**Problem Statement**
+You're given strings `jewels` representing the types of stones that are jewels, and `stones` representing the stones you have. Each character in `stones` is a type of stone you have. You want to know how many of the stones you have are also jewels.[cite: 8]
 
----
-## Problem Statement
-You're given strings `jewels` representing the types of stones that are jewels, and `stones` representing the stones you have. Each character in `stones` is a type of stone you have. You want to know how many of the stones you have are also jewels.
-
-Letters are case sensitive, so `"a"` is considered a different type of stone from `"A"`.
+Letters are case sensitive, so `"a"` is considered a different type of stone from `"A"`.[cite: 8]
 
 ### Example 1:
 > **Input:** `jewels = "aA"`, `stones = "aAAbbbb"`  
-> **Output:** `3`
+> **Output:** `3`[cite: 8]
 
 ### Example 2:
 > **Input:** `jewels = "z"`, `stones = "ZZ"`  
-> **Output:** `0`
+> **Output:** `0`[cite: 8]
 
-### Türkçe Açıklama
-Sana mücevher türlerini temsil eden bir `jewels` metni ve elindeki taşları temsil eden bir `stones` metni veriliyor. `stones` içerisindeki her bir karakter elindeki bir taşı temsil eder. Amacın, sahip olduğun taşların kaç tanesinin aynı zamanda bir mücevher olduğunu bulmaktır.
-
-Harfler büyük-küçük harfe duyarlıdır (case-sensitive), yani `"a"` ile `"A"` farklı türde taşlar olarak kabul edilir.
+> **Note:** The Hash Set pattern is used to store elements in a set to find them later in `O(1)` time, instead of repeatedly scanning the array or string from start to finish (which takes `O(n)` time).
 
 ---
 
-## Verilenler
-* `jewels = "aA"` (Uzunluk: $n$)
-* `stones = "aAAbbbb"` (Uzunluk: $m$)
+### 1. Hash Set Approach (Optimal)
 
----
+Instead of using a string, we use a Hash Set which allows for `O(1)` time complexity for lookups. The operation is divided into two independent stages:[cite: 8]
 
-## 1. Brute Force Yaklaşımı $\implies O(n \cdot m)$
-
-`stones` içindeki her bir taş ($m$ tane) için tek tek `jewels` string'i taranır ($n$ tane). Python'daki `in` operatörü string üzerinde arka planda gizli bir for döngüsü ($O(n)$) çalıştırır.
-
-* İlk taş `'a'` için $\implies$ `'a'` ve `'A'` kontrol edilir ($n$ adım).
-* İkinci taş `'A'` için $\implies$ `'a'` ve `'A'` kontrol edilir ($n$ adım).
-* **Toplam işlem:** $m \text{ defa } n \text{ arama} = m \cdot n$ adım.
+1. **Stage 1 (Set Creation):** We take all characters in the `jewels` string and insert them into a Set (`s = set(jewels)`). Inserting `n` characters into a hash table takes `O(n)` time.[cite: 8]
+2. **Stage 2 (Checking Stones):** We set up a single loop over the `stones` string (`m` steps). For each stone, we perform a `stone in s` check. Since searching in a Set is `O(1)`, checking each stone is instantaneous (`m * O(1) = O(m)`).[cite: 8]
 
 ```python
 class Solution:
     def numJewelsInStones(self, jewels: str, stones: str) -> int:
+        s = set(jewels)
         count = 0
         
-        # stones üzerinde m adım döner
         for stone in stones:
-            # String üzerinde arama O(n) sürer (gizli döngü)
+            if stone in s:
+                count += 1
+                
+        return count
+```
+
+**Time Complexity:** `O(n + m)`
+Creating the set takes `O(n)` time, and iterating through the stones takes `O(m)` time. Since these operations are consecutive rather than nested, we add them together (`n + m`).[cite: 8]
+
+**Space Complexity:** `O(n)`
+We use a Hash Set to store the characters from the `jewels` string, taking up memory proportional to `n`.[cite: 8]
+
+--- 
+
+### 2. Brute Force Approach
+
+For every single stone in `stones` (`m` times), the `jewels` string is scanned entirely (`n` times).[cite: 8] The `in` operator in Python runs a hidden `O(n)` for-loop in the background when used on a string.[cite: 8]
+
+* For the first stone, `n` checks are made.[cite: 8]
+* For the second stone, another `n` checks are made.[cite: 8]
+* **Total operations:** `m` times `n` searches = `m * n` steps.[cite: 8]
+
+```python
+class SolutionBruteForce:
+    def numJewelsInStones(self, jewels: str, stones: str) -> int:
+        count = 0
+        
+        for stone in stones:
             if stone in jewels:
                 count += 1
                 
         return count
 ```
 
-* **Time Complexity:** $O(n \cdot m)$ — İç içe iki döngü oluşur.
-* **Space Complexity:** $O(1)$ — Ekstra bir veri yapısı oluşturulmaz.
+**Time Complexity:** `O(n * m)`
+The combination of the explicit `for` loop and the implicit `in` operator string search creates a nested loop scenario.[cite: 8]
 
-## 2. Hash Set Yaklaşımı (Optimal) $\implies O(n + m)$
-
-String yerine $O(1)$ sürede arama yapabilen bir Hash Set kullanılır. İşlem iki bağımsız aşamaya bölünür:
-
-1. **Aşama 1 (Set Oluşturma):** `jewels` string'indeki tüm karakterler alınıp bir `Set` yapısına atılır (`s = set(jewels)`).
-   * $n$ tane karakter tek tek okunup hash tablosuna eklenir.
-   * **Maliyet:** $O(n)$
-2. **Aşama 2 (Taşları Kontrol Etme):** `stones` string'i üzerinde tek bir döngü kurulur ($m$ adım).
-   * Her bir taş için `stone in s` kontrolü yapılır.
-   * Set'te arama yapmak $O(1)$ olduğu için her taşın kontrolü anında biter.
-   * **Maliyet:** $m \cdot O(1) = O(m)$
-
---- 
-* **Toplam Maliyet:**
-
-$$\text{Set'e yazma } (n) + \text{Set'ten sorgulama } (m) = \mathbf{O(n + m)}$$
-
-* **Time Complexity:** $O(n + m)$ — İç içe döngü çarpılır ($n \cdot m$), ardışık yapılan işlemler toplanır ($n + m$).
-* **Space Complexity:** $O(n)$ — `jewels` karakterlerini saklamak için Set kullanılır. 
-
-* (kod içerisinde sadece set'i depoluyoruz o da n karakter kadar. O yüzden O(n) )
-
-
-```python
-class Solution:
-    def numJewelsInStones(self, jewels: str, stones: str) -> int:
-        # Aşama 1: O(n) sürede Set oluşturma
-        s = set(jewels)
-        count = 0
-        
-        # Aşama 2: O(m) sürede taşları sorgulama
-        for stone in stones:
-            # Set üzerinde arama O(1) sürer
-            if stone in s:
-                count += 1
-                
-        return count
-```
+**Space Complexity:** `O(1)`
+No additional data structure is created.[cite: 8]
