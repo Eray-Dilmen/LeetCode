@@ -1,4 +1,4 @@
-> 💡 **Not:** Bu soru **Hash Maps & Sets** kalıbı ile çözülmüştür. Kalıbın genel mantığı, kullanım senaryoları ve teorik detayları için [ README.md](../README.md) dosyasına bakabilirsiniz.
+> 💡 **Note:** This problem is solved using the **Hash Maps & Sets** pattern. For the general logic, use cases, and theoretical details of this pattern, refer to the [pattern README.md](../README.md).
 
 # 383. Ransom Note
 
@@ -18,63 +18,27 @@ Each letter in `magazine` can only be used once in `ransomNote`.
 > **Input:** `ransomNote = "aa"`, `magazine = "aab"`  
 > **Output:** `true`
 
----
-
-## Türkçe Açıklama
-Bizden, `ransomNote` stringini yazabilmek için elimizdeki `magazine` stringinde yeterli harf olup olmadığını bulmamız isteniyor. Harflerin sıralaması önemli değildir. Sadece `ransomNote` içindeki her bir harf için, `magazine` içinde o harften en az o kadar sayıda bulunması ve her harfin yalnızca bir kez kullanılabilmesi kuralına dikkat etmemiz gerekiyor.
-
-> **Not:** Hash table kalıbı (pattern), string veya dizilerdeki elemanların frekansını (kaç adet olduklarını) saymak ve daha sonra bu elemanları $O(1)$ sürede aramak/kontrol etmek için kullanılır.
+> **Note:** The Hash Map pattern is used to count the frequencies of elements in a string or array, allowing for `O(1)` time lookups and verifications later.
 
 ---
 
-### 1. Brute Force Yaklaşımı
+### 1. Hash Map Approach (Optimal)
+
+* First, we iterate through all the characters in `magazine` and record their frequencies in a dictionary (Hash Map).
+* Next, we iterate through the characters of `ransomNote` and check if the character exists in the dictionary and if its count is greater than zero (`> 0`).
+* If it exists and is available, we decrement its count by 1 and continue. If it doesn't exist or the count is zero, we immediately return `False`.
 
 ```python
 class Solution:
     def canConstruct(self, ransomNote: str, magazine: str) -> bool:
-        # String immutable olduğu için silme işlemi yapabilmek adına listeye dönüştürülür
-        mag_list = list(magazine)  # Space Complexity = O(m)
-        
-        # Time Complexity = O(n * m)
-        for char in ransomNote:  # O(n) -> ransomNote karakterleri taranır
-            if char in mag_list:  # O(m) -> Liste içinde lineer arama yapılır
-                mag_list.remove(char)  # O(m) -> Eleman listeden silinir ve kaydırma yapılır
-            else:
-                return False
-                
-        return True
-```
-**Time Complexity (Zaman Karmaşıklığı):** $O(n \times m)$
+        guide = {}
 
-`ransomNote` içindeki her bir karakter ($n$) için, `mag_list` listesinde hem arama (`in`) hem de silme (`remove`) işlemi yapılır. Listelerde bu işlemler $O(m)$ sürede gerçekleştiğinden toplam süre $O(n \times m)$ olur.
-
-**Space Complexity (Alan Karmaşıklığı):** $O(m)$
-
-String değiştirilemez (immutable) olduğu için `magazine` karakterlerini tutan ve silme işlemlerini gerçekleştirdiğimiz ek bir liste (`mag_list`) oluşturulur; bu liste $m$ eleman kadar yer kaplar.
-
---- 
-
-### 2. Hash Map Yaklaşımı (Optimal)
-
-* Öncelikle `magazine` içindeki tüm harfleri tek bir döngüyle gezip, hangi harften kaç tane olduğunu bir sözlüğe (Hash Map) kaydederiz.
-* Ardından `ransomNote` harflerini döngüye sokar, sözlükte var mı ve adedi yeterli mi ($>0$) diye kontrol ederiz.
-* Varsa değerini $1$ eksiltir, yolumuza devam ederiz. Yoksa anında `False` döneriz.
-
-
-
-```python
-class Solution:
-    def canConstruct(self, ransomNote: str, magazine: str) -> bool:
-        guide = {} # Space Complexity = O(1)
-
-        # Time Complexity = O(m) -> magazine içindeki harf sayısı kadar çalışır
-        for index, letter in enumerate(magazine):
+        for letter in magazine:
             if letter in guide:
                 guide[letter] += 1
             else:
                 guide[letter] = 1
 
-        # Time Complexity = O(n) -> ransomNote içindeki harf sayısı kadar çalışır
         for char in ransomNote:
             if char not in guide or guide[char] == 0:
                 return False
@@ -82,8 +46,33 @@ class Solution:
 
         return True
 ```
-**Time Complexity (Zaman Karmaşıklığı):** $O(m + n)$
-Birinci döngü `magazine` uzunluğu ($m$) kadar çalışır ve $O(m)$ zaman alır. İkinci döngü `ransomNote` uzunluğu ($n$) kadar çalışır ve $O(n)$ zaman alır. Bu iki döngü iç içe (nested) değil, ardışık (arka arkaya) olduğu için karmaşıklıklar çarpılmaz, toplanır. Arama işlemleri (`in` anahtar kelimesi) hash map üzerinde yapıldığı için $O(1)$ sürer. Sonuç olarak toplam süre $O(m + n)$ olur.
 
-**Space Complexity (Alan Karmaşıklığı):** $O(1)$
-`guide` adında ekstra bir sözlük yapısı oluşturduk. En kötü senaryoda bile İngilizce alfabesinde en fazla 26 adet küçük harf bulunur. Yani sözlüğün boyutu girdi ne kadar büyük olursa olsun en fazla 26 elemana kadar büyüyebilir. Büyüme miktarı girdiye bağlı olmayıp sabit (constant) bir sınıra sahip olduğu için alan karmaşıklığı $O(1)$ olarak kabul edilir.
+**Time Complexity:** `O(m + n)`
+The first loop runs for the length of `magazine` (`m`), taking `O(m)` time. The second loop runs for the length of `ransomNote` (`n`), taking `O(n)` time. Since these loops are consecutive and not nested, their complexities are added. Dictionary lookups (`in`) take `O(1)` time. Thus, the total time complexity is `O(m + n)`.
+
+**Space Complexity:** `O(1)`
+We created an extra dictionary named `guide`. Even in the worst-case scenario, the English alphabet only contains 26 lowercase letters. This means the dictionary size is capped at 26 elements, regardless of the input size. Since the memory footprint is bounded by a constant, the space complexity is `O(1)`.
+
+--- 
+
+### 2. Brute Force Approach
+
+```python
+class SolutionBruteForce:
+    def canConstruct(self, ransomNote: str, magazine: str) -> bool:
+        mag_list = list(magazine)
+        
+        for char in ransomNote:
+            if char in mag_list:
+                mag_list.remove(char)
+            else:
+                return False
+                
+        return True
+```
+
+**Time Complexity:** `O(n * m)`
+For each character (`n`) in `ransomNote`, we perform both a lookup (`in`) and a deletion (`remove`) operation on the `mag_list`. Because these list operations take `O(m)` time, the total time complexity becomes `O(n * m)`.
+
+**Space Complexity:** `O(m)`
+Since strings are immutable in Python, we create an additional list (`mag_list`) to hold the characters of `magazine` so we can perform deletion operations. This list requires space proportional to `m`.
