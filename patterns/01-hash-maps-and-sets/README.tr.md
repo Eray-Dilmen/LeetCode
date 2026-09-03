@@ -13,7 +13,7 @@
    * *Örnek (`0217-Contains Duplicate`):* Bir dizide gezinirken elemanları bir Hash Set'e eklersiniz. Eğer eklenecek eleman zaten Set içinde mevcutsa, dizide kopya (duplicate) var demektir. $O(1)$ arama hızı sayesinde $O(n^2)$ iç içe döngülerden kurtulursunuz.
 
 2. **Hızlı Eşleştirme ve Tamamlayıcılar (Hafıza Takası):** *"Bir çifti tamamlamak için ihtiyacım olan parça elimde var mı?"*
-   * *Örnek (`0001-Two Sum`):* $x + y = \text{target}$ denklemini $y = \text{target} - x$ olarak düşünürsünüz. Döngüdeki her $x$ için Hash Map'e şu soruyu sorarsınız: *"Hafızanda beni hedefe ulaştıracak $y$ değeri var mı?"*
+   * *Örnek (`0001-Two Sum`):* $x + y = \text{target}$ denklemini $y = \text{target} - x$ olarak düşünürsünüz. Döngüdeki her $x$ için Hash Map'e şu soruyu sorarsınız: *"Hafızanda beni hedefe ulaştıracak `y` değeri var mı?"*
 
 3. **Frekans / Adet Sayma:** *"Hangi harf/sayı kaç kez geçti?"*
    * *Örnek (`0383-Ransom Note` & `1189-Maximum Number of Balloons`):* Kaynak bir metindeki (örneğin dergi sayfaları) karakterlerin frekanslarını sayıp bir Hash Map'e atarsınız. Ardından, hedef kelimeyi oluşturmak için yeterli harfiniz olup olmadığını bu Map üzerinden doğrularsınız.
