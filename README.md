@@ -8,14 +8,15 @@ A curated collection designed to build a strong foundation in computer science f
 
 ## Repository Structure
 
-The repository is organized into three main domains to separate theoretical concepts, algorithmic practice, and database queries:
+The repository is organized into four main domains to separate theoretical concepts, algorithmic practice, database queries, and foundational problems:
 
 * **`patterns/`**: Pattern-based practical problem solving (Data Structures & Algorithms).
 * **`sql/`**: LeetCode SQL problem solutions and query optimizations.
+* **`core-concepts/`**: Fundamental programming problems including basic math, string manipulation, and simulations.
 * **`algorithms/`**: Theoretical foundations, mathematical analysis, and Big-O notation.
 
 ### Problem Folder Format
-Regardless of the domain (DSA or SQL), each specific problem is stored in its own directory containing:
+Regardless of the domain, each specific problem is stored in its own directory containing:
 * `solution.sql` / `solution.py`: Clean and optimized code.
 * `README.md`: Problem summary, step-by-step approach, and asymptotic complexity in English.
 * `README.tr.md`: Turkish translation of the problem explanation, occasionally including personal study notes.
@@ -61,7 +62,18 @@ Topics covered include:
 
 ---
 
-## 3. Core Algorithms & Complexity (`algorithms/`)
+## 3. Core Concepts & Foundations (`core-concepts/`)
+
+This section houses fundamental programming challenges that fall outside both the standard 17 algorithmic patterns and SQL database queries. These are standalone problems focused on basic language proficiency, logical rule following, and foundational math operations.
+
+Topics covered include:
+* **Basic Math:** Reversing integers, palindrome checks, and digit manipulation.
+* **String Manipulation:** Common prefix searching, string formatting, and parsing.
+* **Simulation & Rule Implementation:** Step-by-step logic translation (e.g., Roman to Integer conversions).
+
+---
+
+## 4. Core Algorithms & Complexity (`algorithms/`)
 
 The theoretical and mathematical backbone of the repository. This section covers the fundamental rules of algorithmic analysis before writing any code.
 
