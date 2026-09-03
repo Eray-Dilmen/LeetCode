@@ -1,6 +1,6 @@
 > 💡 **Note:** This problem is solved using the **Hash Maps & Sets** pattern. For the general logic, use cases, and theoretical details of this pattern, refer to the [pattern README.md](../README.md).
 
-# 771. Jewels and Stones
+# [771. Jewels and Stones](https://leetcode.com/problems/jewels-and-stones/)
 
 **Problem Statement**
 You're given strings `jewels` representing the types of stones that are jewels, and `stones` representing the stones you have. Each character in `stones` is a type of stone you have. You want to know how many of the stones you have are also jewels.
