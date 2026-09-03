@@ -1,6 +1,6 @@
 > 💡 **Note:** This problem is solved using the **Hash Maps & Sets** pattern. For the general logic, use cases, and theoretical details of this pattern, refer to the [pattern README.md](../README.md).
 
-# 1. Two Sum
+# [1. Two Sum](https://leetcode.com/problems/two-sum/)
 
 **Problem Statement**
 You are given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.
