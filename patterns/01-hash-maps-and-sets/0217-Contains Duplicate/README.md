@@ -1,9 +1,8 @@
+> 💡 **Note:** This problem is solved using the **Hash Maps & Sets** pattern. For the general logic, use cases, and theoretical details of this pattern, refer to the [pattern README.md](../README.md).
+
 # 217. Contains Duplicate
 
-> 💡 **Not:** Bu soru **Hash Maps & Sets** kalıbı ile çözülmüştür. Kalıbın genel mantığı, kullanım senaryoları ve teorik detayları için [ README.md](../README.md) dosyasına bakabilirsiniz.
-
----
-## Problem Statement
+**Problem Statement**
 Given an integer array `nums`, return `true` if any value appears at least twice in the array, and return `false` if every element is distinct.
 
 ### Example 1:
@@ -18,67 +17,50 @@ Given an integer array `nums`, return `true` if any value appears at least twice
 > **Input:** `nums = [1,1,1,3,3,4,3,2,4,2]`  
 > **Output:** `true`
 
-### Türkçe Açıklama
-Sana `nums` adında tam sayılardan oluşan bir dizi veriliyor. Eğer dizideki herhangi bir değer en az iki kez geçiyorsa `true`, tüm elemanlar birbirinden farklıysa (hiç tekrar yoksa) `false` döndürmen isteniyor. Amacın dizide kopya/tekrar eden eleman olup olmadığını bulmaktır.
+> **Note:** The Hash Set pattern is used to check for existence in `O(1)` time. By inserting elements into a Set as we iterate, we can instantly detect if an element has been seen before, avoiding the need for nested `O(n^2)` loops.
 
 ---
 
-## Verilenler
-* `nums = [1, 2, 3, 1]` (Dizinin uzunluğu: $n$)
+### 1. Hash Set Approach (Optimal)
 
----
-
-## 1. Hash Set Yaklaşımı (Optimal) $\implies O(n)$
-
-Dizi üzerinde $O(1)$ sürede arama yapabilen bir Hash Set kullanılır. Elemanları tek tek kümeye (set) eklerken, o elemanın zaten kümede olup olmadığına bakarız. Eğer kümede varsa, o elemandan daha önce de görülmüş demektir ve anında `True` döneriz (Erken Çıkış / Early Exit).
+We use a Hash Set which allows for `O(1)` time complexity for lookups. As we iterate through the array and add elements to the set, we check if the element is already in the set. If it is, it means the element has appeared before, and we immediately return `True` (Early Exit).
 
 ```python
 class Solution:
-    def containsDuplicate(self, nums: List[int]) -> bool:
+    def containsDuplicate(self, nums: list[int]) -> bool:
         numbers = set()
         
-        # nums üzerinde n adım döner
         for number in nums:
-            # Set üzerinde arama O(1) sürer
             if number in numbers:
                 return True
-            
-            # Set'e ekleme işlemi
             numbers.add(number)
             
         return False
 ```
 
-* **Toplam Maliyet:**
-Dizideki elemanlar tek tek gezilir ($n$). Set'te arama yapmak $O(1)$'dir.
-$$\text{Maksimum Döngü Sayısı } (n) \cdot \text{Arama Maliyeti } (1) = \mathbf{O(n)}$$
+**Time Complexity:** `O(n)`
+In the worst-case scenario (no duplicates), the array is completely traversed once. Lookup operations in a Hash Set take `O(1)` time on average, resulting in an overall `O(n)` time complexity.
 
-* **Time Complexity:** $O(n)$ — En kötü senaryoda (hiç tekrar yoksa) dizi bir kez tamamen gezilir.
-* **Space Complexity:** $O(n)$ — En kötü senaryoda tüm benzersiz elemanlar Set içinde saklanır.
+**Space Complexity:** `O(n)`
+In the worst-case scenario, all unique elements are stored in the Hash Set, taking memory proportional to the size of the array.
 
 ---
 
-## 2. Frequency Map Yaklaşımı (Benim kodum) $\implies O(n)$
+### 2. Frequency Map Approach (Alternative)
 
-Bir sözlük (Dictionary) kullanılarak her sayının dizide kaç kez geçtiği hesaplanır. Daha sonra sözlükteki elemanlar gezilerek herhangi bir sayının frekansının 1'den büyük olup olmadığına bakılır.
-
-* **Aşama 1 (Sözlüğü Doldurma):** Dizideki $n$ eleman gezilerek sayıların frekansları sözlüğe eklenir ($O(n)$).
-* **Aşama 2 (Tekrar Kontrolü):** Sözlükteki benzersiz elemanlar (en kötü durumda $m = n$ adet) gezilip frekans kontrolü yapılır ($O(n)$).
+We use a dictionary to count how many times each number appears in the array. Then, we iterate through the dictionary to check if any number has a frequency greater than 1.
 
 ```python
-class Solution:
-    def containsDuplicate(self, nums: List[int]) -> bool:
+class SolutionFrequencyMap:
+    def containsDuplicate(self, nums: list[int]) -> bool:
         number_count = {}
         
-        # Aşama 1: O(n) sürede frekansları hesaplama
         for number in nums:
-            # Sözlükte arama O(1) sürer
             if number not in number_count:
                 number_count[number] = 1
             else:
                 number_count[number] += 1
         
-        # Aşama 2: En kötü durumda O(n) sürede tekrar arama
         for number in number_count:
             if number_count[number] > 1:
                 return True
@@ -86,26 +68,22 @@ class Solution:
         return False
 ```
 
-* **Toplam Maliyet:**
-$$\text{Sözlüğe Yazma } (n) + \text{Sözlüğü Gezme } (n) = O(2n) \implies \mathbf{O(n)}$$
+**Time Complexity:** `O(n)`
+Populating the dictionary takes `O(n)` time. Iterating over the unique elements in the dictionary takes another `O(n)` time in the worst case. Total time is `O(2n)`, which simplifies to `O(n)`.
 
-> **Not:** Asimptotik karmaşıklığı optimal çözümle aynı ($O(n)$) olsa da, sözlükler değerleri (values) de tuttuğu için bellekte daha çok yer kaplar ve iki ayrı döngü çalıştığı için sabit bir çarpan (constant factor) dezavantajı yaratır.
-
-* **Time Complexity:** $O(n)$ — En kötü durumda $2n$ işlem yapılır, başkatsayı atıldığı için $O(n)$'dir.
-* **Space Complexity:** $O(n)$ — En kötü durumda tüm benzersiz sayılar ve sayı frekansları sözlükte tutulur.
+**Space Complexity:** `O(n)`
+In the worst-case scenario, all unique numbers and their frequencies are stored in the dictionary. While asymptotically the same as the Hash Set, dictionaries store both keys and values, giving it a slightly larger memory footprint constant.
 
 ---
 
-## 3. Brute Force Yaklaşımı $\implies O(n^2)$
+### 3. Brute Force Approach
 
-İç içe iki döngü kurularak dizideki her bir eleman, kendisinden sonraki tüm elemanlarla tek tek karşılaştırılır. Eğer eşleşen iki eleman bulunursa `True` döndürülür. Ekstra alan kullanılmaz ancak zaman açısından çok yavaştır ve büyük dizilerde **Time Limit Exceeded (TLE)** hatası alır.
+We set up nested loops to compare each element with every subsequent element. If a match is found, we return `True`. This method uses no extra space but is extremely slow and will result in a **Time Limit Exceeded (TLE)** error for large arrays.
 
 ```python
-class Solution:
-    def containsDuplicate(self, nums: List[int]) -> bool:
-        # Dış döngü n adım döner
+class SolutionBruteForce:
+    def containsDuplicate(self, nums: list[int]) -> bool:
         for i in range(len(nums)):
-            # İç döngü n - i - 1 adım döner
             for j in range(i + 1, len(nums)):
                 if nums[i] == nums[j]:
                     return True
@@ -113,5 +91,8 @@ class Solution:
         return False
 ```
 
-* **Time Complexity:** $O(n^2)$ — İç içe döngüler diziyi ortalama $\frac{n(n-1)}{2}$ kez gezer.
-* **Space Complexity:** $O(1)$ — Ekstra bir veri yapısı oluşturulmaz.
+**Time Complexity:** `O(n^2)`
+The nested loops traverse the array approximately `n(n-1)/2` times.
+
+**Space Complexity:** `O(1)`
+No additional data structure is created.
