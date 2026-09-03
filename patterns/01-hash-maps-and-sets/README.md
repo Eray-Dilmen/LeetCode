@@ -13,7 +13,7 @@
    * *Example (`0217-Contains Duplicate`):* As you iterate through an array, add elements to a Hash Set. If you encounter an element that is already in the set, a duplicate exists. The $O(1)$ lookup prevents the need for nested $O(n^2)$ loops.
 
 2. **Fast Matching & Complements (Memory Trade-off):** *"Do I have the exact piece I need to complete a pair?"*
-   * *Example (`0001-Two Sum`):* For an equation like $x + y = \text{target}$, rewrite it as $y = \text{target} - x$. For every $x$ you visit, ask the Hash Map: *"Do you have the required $y$ in your memory?"* 
+   * *Example (`0001-Two Sum`):* For an equation like $x + y = \text{target}$, rewrite it as $y = \text{target} - x$. For every $x$ you visit, ask the Hash Map: *"Do you have the required `y` in your memory?"* 
 
 3. **Frequency Counting:** *"How many times does this character/number appear?"*
    * *Example (`0383-Ransom Note` & `1189-Maximum Number of Balloons`):* Count the frequencies of characters in a source string and store them in a Hash Map to verify if you have the exact required amounts to construct a target word.
