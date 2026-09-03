@@ -1,51 +1,36 @@
-> 📌 **Rehber:** Bu dizin, **Hash Maps & Sets** kalıbının mantığını ve örnek problemler üzerindeki uygulamalarını içerir.
-> * **Teorik Mantık:** Kalıbın çalışma prensibi ve zaman/alan karmaşıklığı analizleri için bu [README.md](README.md) dosyasını inceleyebilirsiniz.
-> * **Pratik Sorular:** Kalıbın uygulandığı çözümleri görmek için ilgili soru klasörlerine (örn. `0771-Jewels and Stones`) gidebilirsiniz.
+> 📌 **Guide:** This directory covers the logic and practical applications of the **Hash Maps & Sets** pattern.
+> * **Theoretical Logic:** Read this `README.md` for core principles and time/space complexity analysis.
+> * **Practical Problems:** Navigate to the specific problem folders (e.g., `0001-Two Sum`) to see the pattern in action.
 
----
+## What is the Hash Map (and Hash Set) Pattern?
 
-### 1. Hash Map (ve Hash Set) Kalıbı Nedir ve Neden Kullanılır?
+* **Definition:** A Hash Map (or dictionary in Python, `dict`) is a data structure that stores **Key-Value** pairs. A Hash Set (`set`) is a variation that only stores unique keys without associated values.
+* **The Core Superpower:** Checking if an element exists (**Lookup / Search**) takes $O(n)$ time in an array or list, but only **$O(1)$ (constant time)** in a Hash Map/Set. This makes it the ultimate tool for optimizing time complexity.
 
-* **Tanım:** Anahtar-değer (**Key-Value**) ikilisiyle çalışan bir veri yapısıdır (Python'daki `dict`). Set ise sadece tekil anahtarları tutan halidir (`set`).
-* **Kritik Süper Gücü:** Bir elemanın içeride var olup olmadığını sorgulamak (**Lookup / Search**) listelerde $O(n)$ sürerken, Hash Map/Set içinde $O(1)$ (**anlık / sabit zaman**) sürer.
+## When to Use It? (Indicators & Repository Examples)
 
-### Ne Zaman Kullanılır? (İpuçları ve Örnekler)
+1. **Checking Uniqueness & Existence:** *"Have I seen this element before?"*
+   * *Example (`0217-Contains Duplicate`):* As you iterate through an array, add elements to a Hash Set. If you encounter an element that is already in the set, a duplicate exists. The $O(1)$ lookup prevents the need for nested $O(n^2)$ loops.
 
-1. **Frekans / Adet Sayma:** *"Hangi harf/sayı kaç kez geçti?"*
-   * *Örnek (Valid Anagram):* İki kelimedeki harf sayıları aynı mı? Harfleri sayıp Hash Map'e atarsın.
+2. **Fast Matching & Complements (Memory Trade-off):** *"Do I have the exact piece I need to complete a pair?"*
+   * *Example (`0001-Two Sum`):* For an equation like $x + y = \text{target}$, rewrite it as $y = \text{target} - x$. For every $x$ you visit, ask the Hash Map: *"Do you have the required $y$ in your memory?"* 
 
-2. **Hızlı Eşleştirme / Arama (Hafıza Takası):** *"Daha önce bu elemanı gördüm mü?"* veya *"Tamamlayıcısı bende var mı?"*
-   * *Örnek (Two Sum):* $x + y = \text{target} \implies y = \text{target} - x$. Her elemanda *"Beni tamamlayan $y$ değeri hafızamda var mı?"* diye $O(1)$ sürede Hash Map'e bakarsın.
+3. **Frequency Counting:** *"How many times does this character/number appear?"*
+   * *Example (`0383-Ransom Note` & `1189-Maximum Number of Balloons`):* Count the frequencies of characters in a source string and store them in a Hash Map to verify if you have the exact required amounts to construct a target word.
 
-3. **Kümeye Aitlik Kontrolü:** *"Bu eleman izin verilen/özel grupta var mı?"* (771. soru: *Jewels and Stones*).
+## Hash Set vs. Hash Map: Which One to Choose?
 
----
+**Hash Set (`set`)**
+* A collection of unique keys.
+* **The Question it Answers:** *"Does this element exist in the pool?"*
+* **Use Case (`0771-Jewels and Stones`):** You only need to know *if* a stone is a jewel. You store the jewels in a Set (`{"a", "A"}`) and check each stone against it. You do not need to know how many times the jewel appeared in the reference string.
 
-### 💡 Ekstra Detaylar ve Kod Örnekleri
+**Hash Map (`dict`)**
+* A mapping table linking a Key to a specific Value.
+* **The Question it Answers:** *"Does this exist, and if so, what is its associated data (count, original index, etc.)?"*
+* **Use Case (`0001-Two Sum`):** You need to know both *if* the complement exists AND *what its original array index was*. Therefore, you must map the data: `{"number": index}`.
 
-**Hash Set vs Hash Map (Fark Nedir?)**
+## 💡 Professional Details & Edge Cases
 
-
-* **Hash Set (`set`):** Sadece "Tekil Elemanlar Listesi"dir. İçinde sadece anahtar (Key) tutar, karşılığında bir değer yoktur.
-  * Sorduğun tek soru: *"Bu eleman içeride **var mı yok mu?**"*
-  * `{"a", "A", "b"}` (Python: `set`)
-
-* **Hash Map (`dict`):** Bir "Sözlük / Eşleme Tablosu"dur. Her anahtarın karşısında tuttuğu bir değer (Value) vardır (**Key $\rightarrow$ Value**).
-  * Sorduğun soru: *"Bu eleman var mı, **varsa değeri/adedi/indeksi kaç?**"*
-  * `{"a": 2, "A": 1, "b": 4}` (Python: `dict`)
-
----
-
-### Soru Üzerinden Somut Karşılaştırma
-
-#### 1. Jewels and Stones Sorusu $\rightarrow$ Hash Set yeterlidir:
-* **Amacın:** Taşın mücevher olup olmadığını anlamak.
-* Taş `'a'` gelince sadece *"Bu mücevher mi (kümede var mı)?"* diyorsun. Ekstra bir bilgiye ihtiyacın yok.
-* **Yapı:** `jewel_set = {"a", "A"}`
-
-#### 2. Harf Sayma (Frekans) Sorusu $\rightarrow$ Hash Map zorunludur:
-* **Amacın:** Hangi harften kaç tane olduğunu bulmak.
-* Taş `'a'` gelince sadece varlığını değil, sayısını da tutman gerekir: `'a'` harfi $\rightarrow$ $3$ adet.
-* **Yapı:** `counts = {"a": 3, "A": 1, "b": 4}`
-
-Özetle; bir verinin sadece **varlığını/yokluğunu** kontrol ediyorsan **Set**, o veriye bağlı **ikinci bir bilgi (adet, indeks, karşılık)** saklayacaksan **Map** kullanırsın.
+* **Space-Time Trade-off:** Implementing this pattern almost always reduces Time Complexity from $O(n^2)$ or $O(n \log n)$ down to $O(n)$. However, it increases Space Complexity to $O(n)$ because you are allocating extra memory for the hash table.
+* **Hashable Keys Only:** In Python, you can only use **immutable** data types (like integers, strings, or tuples) as keys in a Map or Set. Mutable types like lists or other dictionaries cannot be hashed.
