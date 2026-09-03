@@ -7,7 +7,8 @@ This directory aims to solve problems encountered in LeetCode and technical inte
 ## Why a Pattern-Based Approach?
 
 * **Easy Recognition:** When faced with a new problem, identifying key clues allows you to quickly determine which pattern to apply (e.g., *Two Pointers* or *Sliding Window*).
-* **Complexity Optimization:** It standardizes the transition steps from a Brute Force solution (e.g., $O(n^2)$) to an optimal result (e.g., $O(n)$ or $O(\log n)$) by using the most suitable data structure or algorithmic pattern.
+
+* **Complexity Optimization:** It standardizes the transition steps from a Brute Force solution (e.g., `O(n²)`) to an optimal result (e.g., `O(n)` or `O(log n)`) by using the most suitable data structure or algorithmic pattern.
 
 ---
 
