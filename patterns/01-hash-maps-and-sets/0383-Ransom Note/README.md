@@ -1,6 +1,6 @@
 > 💡 **Note:** This problem is solved using the **Hash Maps & Sets** pattern. For the general logic, use cases, and theoretical details of this pattern, refer to the [pattern README.md](../README.md).
 
-# 383. Ransom Note
+# [383. Ransom Note](https://leetcode.com/problems/ransom-note/)
 
 **Problem Statement**
 Given two strings `ransomNote` and `magazine`, return `true` if `ransomNote` can be constructed by using the letters from `magazine` and `false` otherwise.
