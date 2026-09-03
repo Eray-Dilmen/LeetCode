@@ -1,4 +1,4 @@
-> 💡 **Not:** Bu soru **Hash Maps & Sets** kalıbı ile çözülmüştür. Kalıbın genel mantığı, kullanım senaryoları ve teorik detayları için [ README.md](../README.md) dosyasına bakabilirsiniz.
+> 💡 **Note:** This problem is solved using the **Hash Maps & Sets** pattern. For the general logic, use cases, and theoretical details of this pattern, refer to the [pattern README.md](../README.md).
 
 # 1. Two Sum
 
@@ -22,23 +22,43 @@ You can return the answer in any order.
 
 ---
 
-**Türkçe Açıklama**
-Bizden bir sayı dizisi (`nums`) ve bir hedef sayı (`target`) veriliyor. Dizideki hangi iki sayının toplamının bu hedef sayıya eşit olduğunu bulmamız ve bu iki sayının **indekslerini** (yerlerini) döndürmemiz isteniyor. Her test case için kesinlikle bir çözüm olduğu ve aynı indeksteki elemanı iki kere kullanamayacağımız belirtilmiş.
+### 1. Hash Map Approach (Optimal)
 
-> **Not:** Hash table kalıbı (pattern), bir elemanı ararken diziyi baştan sona tekrar taramak yerine (ki bu $O(n)$ sürer), elemanları ve indekslerini bir sözlüğe (Hash Map) kaydederek daha sonra bu elemanları $O(1)$ sürede bulmak için kullanılır.
+* We iterate through the array once. At each step, we find the required "complement" by subtracting the current number from the target (`target - num`).
+* If this complement exists in our Hash Map, we have found our match; we return the indices of both numbers.
+* If it does not exist, we save the current number and its index into the Hash Map (`mapping[num] = index`) and proceed to the next number.
 
----
+```python
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        mapping = {} # Space Complexity = O(n)
 
-### 1. Brute Force Yaklaşımı
-* Tüm olasılıkları denemek için iç içe iki döngü (nested loop) kurarız.
-* İlk döngü dizideki ilk sayıyı seçer, ikinci döngü ise geri kalan sayıları tek tek gezerek toplamlarının `target` olup olmadığına bakar.
-* Bu yöntem her bir eleman için dizinin geri kalanını tekrar taradığı için maliyetlidir.
+        # Time Complexity = O(n)
+        for index, num in enumerate(nums):
+            if (target - num) in mapping:
+                return [mapping[target - num], index]
+            else:
+                mapping[num] = index
+```
+
+**Time Complexity:** `O(n)`
+The entire array is traversed only once using a single `for` loop, which takes `O(n)` time. Checking if an element exists in a Python dictionary takes `O(1)` time on average.
+
+**Space Complexity:** `O(n)`
+We created an extra dictionary (`mapping`) to store the numbers and their indices. In the worst-case scenario, we might need to insert all elements into this dictionary, making the space scale linearly with the input size.
+
+--- 
+
+### 2. Brute Force Approach
+
+* We set up nested loops to try every possible pair.
+* The outer loop picks the first number, and the inner loop checks every subsequent number to see if their sum equals the `target`.
+* This method is inefficient because it repeatedly scans the rest of the array for every single element.
 
 ```python
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
         # Space Complexity = O(1)
-        
         # Time Complexity = O(n^2)
         for i in range(len(nums)):
             for j in range(i + 1, len(nums)):
@@ -46,37 +66,8 @@ class Solution:
                     return [i, j]
 ```
 
-**Time Complexity (Zaman Karmaşıklığı):** $O(n^2)$
-Dizi içindeki her bir eleman için ($n$), geri kalan diğer tüm elemanlar ($n-1$) tekrar kontrol edilir. Bu iç içe döngü durumu karmaşıklığı $O(n^2)$ seviyesine çıkarır.
+**Time Complexity:** `O(n^2)`
+For every element in the array (`n`), the rest of the elements are checked. The nested loop structure brings the complexity to `O(n^2)`.
 
-**Space Complexity (Alan Karmaşıklığı):** $O(1)$
-Ekstra hiçbir veri yapısı (liste, sözlük vb.) kullanılmadığı için hafızada kaplanan alan sabittir.
-
---- 
-
-### 2. Hash Map Yaklaşımı (Optimal)
-
-* Diziyi tek bir döngüyle gezeriz. Her adımda şu anki sayıyı hedeften çıkararak aradığımız "diğer sayıyı" (`target - num`) buluruz.
-* Eğer bu aradığımız "diğer sayı" Hash Map'te varsa, eşleşmeyi bulduk demektir; ikisinin indeksini döndürürüz.
-* Eğer yoksa, şu anki sayıyı ve indeksini Hash Map'e (`mapping[num] = index`) kaydeder, bir sonraki sayıya geçeriz.
-
-```python
-class Solution:
-    def twoSum(self, nums: List[int], target: int) -> List[int]:
-        mapping = {} # Space Complexity = O(n)
-
-        # Time Complexity = O(n) -> Dizi içindeki elemanları bir kere gezer
-        for index, num in enumerate(nums):
-            # Aranan sayının map içinde olup olmadığı kontrol edilir (O(1) zaman alır)
-            if (target - num) in mapping:
-                return [mapping[target - num], index]
-            else:
-                # Sayı map'te yoksa değeri anahtar, indeksi value olarak kaydedilir
-                mapping[num] = index
-```
-
-**Time Complexity (Zaman Karmaşıklığı):** $O(n)$
-Dizideki tüm elemanlar `enumerate` ile tek bir `for` döngüsü kullanılarak sadece bir kez gezilir, bu $O(n)$ zaman alır. Sözlük (Hash Map) içinde arama yapma (`in` anahtar kelimesi) işlemi ortalama $O(1)$ sürede gerçekleştiği için toplam karmaşıklık $O(n)$ olur.
-
-**Space Complexity (Alan Karmaşıklığı):** $O(n)$
-Dizideki sayıları ve indekslerini tutabilmek için `mapping` adında ekstra bir sözlük yapısı oluşturduk. En kötü senaryoda (örneğin aradığımız ikili dizinin en sonundaysa), dizideki tüm elemanlar bu sözlüğe eklenebilir. Bu yüzden kullanılan ekstra alan dizinin uzunluğu ($n$) ile doğru orantılı olarak $O(n)$ olur.
+**Space Complexity:** `O(1)`
+No additional data structures (like arrays or hash maps) are used, so the memory footprint remains constant.
