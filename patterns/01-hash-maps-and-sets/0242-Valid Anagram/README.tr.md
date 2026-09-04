@@ -8,12 +8,10 @@ An Anagram is a word or phrase formed by rearranging the letters of a different 
 
 ### Example 1:
 > **Input:** `s = "anagram"`, `t = "nagaram"`  
->  
 > **Output:** `true`  
 
 ### Example 2:
 > **Input:** `s = "rat"`, `t = "car"`  
->  
 > **Output:** `false`  
 
 ---
@@ -27,6 +25,13 @@ Anagram, bir kelimedeki harflerin yerlerinin değiştirilerek (her harfin tam ol
 ### 1. Tek Hash Map Yaklaşımı (Optimal)
 
 Eğer iki metnin uzunluğu birbirinden farklıysa anagram olmaları imkansızdır. Başlangıçta tek bir sözlük oluşturup, `s` metnindeki harflerin frekansını (kaç kere geçtiklerini) sayarız. Daha sonra `t` metnini gezeriz. Eğer `t`'deki bir harf sözlüğümüzde yoksa veya adedi `0`'a düşmüşse, anında `False` döndürürüz. Aksi takdirde sözlükteki değerini 1 azaltırız. Erken çıkış (early exit) yapabildiği için en optimal çözümdür.
+
+> 💡 **Kod Temizliği İpucu: `count.get(char, 0) + 1`**
+> 
+> Bir harfin sözlükte olup olmadığını kontrol etmek için 4 satırlık bir `if/else` bloğu yazmak yerine, `.get()` metodunu kullanarak aynı işlemi tek satırda, çok daha sade ve temiz bir şekilde yapabiliriz:
+> * **`count.get(char, 0)` ne yapar?:** Normalde sözlükte olmayan bir anahtarı çağırdığınızda (`count[char]`) Python `KeyError` hatası verir. `.get()` metodu ise hata vermek yerine belirlediğimiz varsayılan bir değeri (default value) döndürür.
+> * **Parametreler:** İlk parametre (`char`) sözlükte aranan anahtardır. İkinci parametre (`0`) ise harf sözlükte henüz yoksa döndürülecek varsayılan değerdir.
+> * **Neden `+ 1`?:** Harf sözlükte yoksa `.get()` ifadesi `0` döner, sonuna `+ 1` ekleyince harf ilk kez `1` değeriyle kaydedilir. Harf zaten varsa mevcut sayıyı getirir (örneğin `2`), `+ 1` ekleyince adedi bir artırılmış olur (`3`).
 
 ```python
 class Solution:
@@ -109,6 +114,7 @@ class SolutionCounter:
 **Time Complexity (Zaman Karmaşıklığı):** `O(n)`
 `Counter` fonksiyonu verilen metni baştan sona taradığı için `O(n)` sürer.
 **Space Complexity (Alan Karmaşıklığı):** `O(1)`
+Sayaçlar maksimum 26 karakter tutar.
 
 ---
 

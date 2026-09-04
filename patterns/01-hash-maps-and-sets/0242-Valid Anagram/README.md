@@ -8,12 +8,10 @@ An Anagram is a word or phrase formed by rearranging the letters of a different 
 
 ### Example 1:
 > **Input:** `s = "anagram"`, `t = "nagaram"`  
->  
 > **Output:** `true`  
 
 ### Example 2:
 > **Input:** `s = "rat"`, `t = "car"`  
->  
 > **Output:** `false`  
 
 ---
@@ -21,6 +19,13 @@ An Anagram is a word or phrase formed by rearranging the letters of a different 
 ### 1. Single Hash Map Approach (Optimal)
 
 If the lengths of the strings are different, they cannot be anagrams. We use a single dictionary to count the frequencies of characters in string `s`. Then, we iterate through string `t`. If a character from `t` is not in our dictionary or its count has reached `0`, we immediately return `False`. Otherwise, we decrement the count. This early exit strategy makes it the most optimal hash map approach.
+
+> 💡 **Code Cleanliness Tip: `count.get(char, 0) + 1`**
+> 
+> Instead of writing a bulky 4-line `if/else` block to check if a key exists before incrementing it, we use the `.get()` method to achieve the exact same logic in a single, clean line:
+> * **How it works:** Normally, accessing a missing key (`count[char]`) throws a `KeyError`. The `.get(key, default)` method safely returns a default value instead.
+> * **Parameters:** The first parameter (`char`) is the key we are looking for. The second parameter (`0`) is the default value returned if the key does not exist yet.
+> * **Why `+ 1`?:** If the character is new, `.get()` returns `0`, and adding `1` saves it into the dictionary with a value of `1`. If it already exists, `.get()` returns the current count (e.g., `2`), and adding `1` updates it to `3`.
 
 ```python
 class Solution:
