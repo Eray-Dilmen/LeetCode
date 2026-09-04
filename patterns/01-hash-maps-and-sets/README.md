@@ -1,34 +1,45 @@
-> 📌 **Guide:** This directory covers the logic and practical applications of the **Hash Maps & Sets** pattern.
-> * **Theoretical Logic:** Read this `README.md` for core principles and time/space complexity analysis.
-> * **Practical Problems:** Navigate to the specific problem folders (e.g., `0001-Two Sum`) to see the pattern in action.
+> 📌 **Guide:** This directory serves as a Concept Map for the **Hash Maps & Sets** pattern.
+> * **Theoretical Logic:** Read this `README.md` for core principles, sub-variations, and time/space complexity analysis.
+> * **Practical Problems:** Navigate to the specific problem folders (e.g., `0001-Two Sum`) to see the pattern in action. Specific edge cases and alternative solutions are documented inside those folders.
 
 ## What is the Hash Map (and Hash Set) Pattern?
 
 * **Definition:** A Hash Map (or dictionary in Python, `dict`) is a data structure that stores **Key-Value** pairs. A Hash Set (`set`) is a variation that only stores unique keys without associated values.
-* **The Core Superpower:** Checking if an element exists (**Lookup / Search**) takes $O(n)$ time in an array or list, but only **$O(1)$ (constant time)** in a Hash Map/Set. This makes it the ultimate tool for optimizing time complexity.
+* **The Core Superpower:** Checking if an element exists (**Lookup / Search**) takes $O(n)$ time in an array or list, but only **$O(1)$ (constant time)** in a Hash Map/Set. This makes it the ultimate tool for optimizing time complexity by trading memory for speed.
 
-## When to Use It? (Indicators & Repository Examples)
+---
 
-1. **Checking Uniqueness & Existence:** *"Have I seen this element before?"*
-   * *Example (`0217-Contains Duplicate`):* As you iterate through an array, add elements to a Hash Set. If you encounter an element that is already in the set, a duplicate exists. The $O(1)$ lookup prevents the need for nested $O(n^2)$ loops.
+## Core Variations & Algorithmic Strategies
 
-2. **Fast Matching & Complements (Memory Trade-off):** *"Do I have the exact piece I need to complete a pair?"*
-   * *Example (`0001-Two Sum`):* For an equation like $x + y = \text{target}$, rewrite it as $y = \text{target} - x$. For every $x$ you visit, ask the Hash Map: *"Do you have the required `y` in your memory?"* 
+The Hash Map pattern is highly versatile. Here is how it is typically deployed:
 
-3. **Frequency Counting:** *"How many times does this character/number appear?"*
-   * *Example (`0383-Ransom Note` & `1189-Maximum Number of Balloons`):* Count the frequencies of characters in a source string and store them in a Hash Map to verify if you have the exact required amounts to construct a target word.
+### 1. Frequency Counting (Histograms)
+* **Algorithm:** Iterate through a sequence (string/array) and count the occurrences of each element. If the element is not in the map, add it with a value of 1. If it exists, increment its value (`map[char] = map.get(char, 0) + 1`).
+* **When to use it:** When you need to verify if you have the exact required amounts to construct a target word, or checking if two strings have identical character counts.
+* **Repository Examples:**
+  * [0242-Valid Anagram](./0242-Valid%20Anagram)
+  * [0383-Ransom Note](./0383-Ransom%20Note)
 
-## Hash Set vs. Hash Map: Which One to Choose?
+### 2. Fast Matching & Complement Search
+* **Algorithm:** Instead of checking every pair with nested loops, calculate the "complement" you need to satisfy a condition. For an equation like $x + y = target$, rewrite it as $y = target - x$. As you iterate, ask the Hash Map: *"Do you have the required `y` in your memory?"* If not, store the current element and its index in the map for future lookups.
+* **When to use it:** Finding pairs that sum/multiply to a specific target without sorting the array first.
+* **Repository Examples:**
+  * [0001-Two Sum](./0001-Two%20Sum)
 
-**Hash Set (`set`)**
-* A collection of unique keys.
-* **The Question it Answers:** *"Does this element exist in the pool?"*
-* **Use Case (`0771-Jewels and Stones`):** You only need to know *if* a stone is a jewel. You store the jewels in a Set (`{"a", "A"}`) and check each stone against it. You do not need to know how many times the jewel appeared in the reference string.
+### 3. Uniqueness & Existence (Hash Set)
+* **Algorithm:** Add elements to a Hash Set as you iterate. If you encounter an element that is already in the set, a duplicate exists. Alternatively, store a reference pool (like jewels) in a set and check each target element against it.
+* **When to use it:** You only need to know *if* an element exists in the pool, and do not care about counts or indices.
+* **Repository Examples:**
+  * [0217-Contains Duplicate](./0217-Contains%20Duplicate)
+  * [0771-Jewels and Stones](./0771-Jewels%20and%20Stones)
 
-**Hash Map (`dict`)**
-* A mapping table linking a Key to a specific Value.
-* **The Question it Answers:** *"Does this exist, and if so, what is its associated data (count, original index, etc.)?"*
-* **Use Case (`0001-Two Sum`):** You need to know both *if* the complement exists AND *what its original array index was*. Therefore, you must map the data: `{"number": index}`.
+### 4. Grouping & Mapping Relationships
+* **Algorithm:** Process an item to find a common "signature" or property (e.g., sorting a string alphabetically). Use this signature as the **Key** in a Hash Map, and append the original item to a list stored in the **Value** (`map[signature].append(item)`).
+* **When to use it:** Grouping elements that share a common trait (like anagrams) or mapping character replacements.
+* **Repository Examples:**
+  * [0049-Group Anagrams](./0049-Group%20Anagrams)
+
+---
 
 ## 💡 Professional Details & Edge Cases
 

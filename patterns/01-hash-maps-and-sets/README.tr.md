@@ -1,36 +1,47 @@
-> 📌 **Rehber:** Bu dizin, **Hash Maps & Sets** kalıbının mantığını ve örnek problemler üzerindeki uygulamalarını içerir.
-> * **Teorik Mantık:** Kalıbın çalışma prensibi ve zaman/alan karmaşıklığı analizleri için bu `README.md` dosyasını inceleyebilirsiniz.
-> * **Pratik Sorular:** Kalıbın uygulandığı çözümleri görmek için ilgili soru klasörlerine (örn. `0001-Two Sum`) gidebilirsiniz.
+> 📌 **Rehber:** Bu dizin, **Hash Maps & Sets** kalıbı için bir Kavram Haritası işlevi görür.
+> * **Teorik Mantık:** Temel prensipler, alt varyasyonlar ve zaman/alan karmaşıklığı analizleri için bu `README.tr.md` dosyasını okuyun.
+> * **Pratik Uygulamalar:** Kalıbın pratikte nasıl uygulandığını görmek için spesifik soru klasörlerine gidin (örneğin, `0001-Two Sum`). Özel istisnalar (edge cases) ve alternatif çözümler bu klasörlerin içinde belgelenmiştir.
 
 ## Hash Map (ve Hash Set) Kalıbı Nedir?
 
-* **Tanım:** Bir Hash Map (Python'daki `dict`), **Anahtar-Değer (Key-Value)** ikilisiyle çalışan bir veri yapısıdır. Hash Set (`set`) ise ilişkili bir değer barındırmadan sadece tekil anahtarları tutan versiyonudur.
-* **Kritik Süper Gücü:** Bir elemanın içeride var olup olmadığını sorgulamak (**Lookup / Search**) listelerde $O(n)$ zaman alırken, Hash Map/Set içinde **$O(1)$ (sabit zaman)** alır. Bu durum, zaman karmaşıklığını optimize etmek için en güçlü araçtır.
+* **Tanım:** Hash Map (Python'daki adıyla sözlük, `dict`), **Anahtar-Değer (Key-Value)** çiftlerini depolayan bir veri yapısıdır. Hash Set (`set`), ilişkili değerler olmadan yalnızca benzersiz (unique) anahtarları depolayan bir varyasyondur.
+* **Temel Gücü:** Bir elemanın var olup olmadığını kontrol etmek (**Arama / Lookup**) bir dizide $O(n)$ zaman alırken, bir Hash Map/Set içinde yalnızca **$O(1)$ (sabit zaman)** alır. Bellek (RAM) harcayarak hız kazandırdığı için zaman karmaşıklığını optimize etmenin en güçlü aracıdır.
 
-## Ne Zaman Kullanılır? (İpuçları ve Depodaki Örnekler)
+---
 
-1. **Tekillik ve Varlık Kontrolü:** *"Daha önce bu elemanı gördüm mü?"*
-   * *Örnek (`0217-Contains Duplicate`):* Bir dizide gezinirken elemanları bir Hash Set'e eklersiniz. Eğer eklenecek eleman zaten Set içinde mevcutsa, dizide kopya (duplicate) var demektir. $O(1)$ arama hızı sayesinde $O(n^2)$ iç içe döngülerden kurtulursunuz.
+## Temel Varyasyonlar ve Algoritmik Stratejiler
 
-2. **Hızlı Eşleştirme ve Tamamlayıcılar (Hafıza Takası):** *"Bir çifti tamamlamak için ihtiyacım olan parça elimde var mı?"*
-   * *Örnek (`0001-Two Sum`):* $x + y = \text{target}$ denklemini $y = \text{target} - x$ olarak düşünürsünüz. Döngüdeki her $x$ için Hash Map'e şu soruyu sorarsınız: *"Hafızanda beni hedefe ulaştıracak `y` değeri var mı?"*
+Hash Map kalıbı çok yönlüdür. Genellikle şu şekillerde uygulanır:
 
-3. **Frekans / Adet Sayma:** *"Hangi harf/sayı kaç kez geçti?"*
-   * *Örnek (`0383-Ransom Note` & `1189-Maximum Number of Balloons`):* Kaynak bir metindeki (örneğin dergi sayfaları) karakterlerin frekanslarını sayıp bir Hash Map'e atarsınız. Ardından, hedef kelimeyi oluşturmak için yeterli harfiniz olup olmadığını bu Map üzerinden doğrularsınız.
+### 1. Frekans Sayımı (Frequency Counting)
+* **Algoritma:** Bir dizi veya metin üzerinde gezinerek her elemanın kaç kez geçtiğini sayın. Eleman haritada yoksa 1 değeriyle ekleyin; varsa değerini artırın (`map[char] = map.get(char, 0) + 1`).
+* **Ne zaman kullanılır:** Hedef bir kelimeyi oluşturmak için gereken harflere tam olarak sahip olup olmadığınızı doğrulamanız gerektiğinde veya iki string'in birebir aynı karakter sayısına sahip olup olmadığını kontrol ederken.
+* **Repo Örnekleri:**
+  * [0242-Valid Anagram](./0242-Valid%20Anagram)
+  * [0383-Ransom Note](./0383-Ransom%20Note)
 
-## Hash Set vs Hash Map: Hangisi Seçilmeli?
+### 2. Hızlı Eşleştirme ve Tamamlayıcı Arama (Complement Search)
+* **Algoritma:** İç içe döngülerle her çifti kontrol etmek yerine, koşulu sağlamak için ihtiyacınız olan "tamamlayıcıyı" hesaplayın. $x + y = target$ denklemi için bunu $y = target - x$ olarak düşünün. Döngüde ilerlerken Hash Map'e şunu sorun: *"Hafızanda ihtiyacım olan `y` var mı?"* Yoksa, mevcut elemanı ve indeksini ilerideki aramalar için haritaya kaydedin.
+* **Ne zaman kullanılır:** Diziyi sıralamaya gerek kalmadan toplamı/çarpımı belirli bir hedefe ulaşan çiftleri bulmada.
+* **Repo Örnekleri:**
+  * [0001-Two Sum](./0001-Two%20Sum)
 
-**Hash Set (`set`)**
-* Sadece tekil elemanlardan oluşan bir kümedir.
-* **Cevapladığı Soru:** *"Bu eleman havuzda mevcut mu?"*
-* **Kullanım Senaryosu (`0771-Jewels and Stones`):** Taşın mücevher olup olmadığını bilmek yeterlidir. Mücevherleri bir Set içine atarsınız (`{"a", "A"}`). Referans metninde o mücevherin kaç kere geçtiğiyle ilgilenmezsiniz.
+### 3. Benzersizlik ve Varlık Kontrolü (Hash Set)
+* **Algoritma:** Döngü ile gezinirken elemanları bir Hash Set'e ekleyin. Eğer zaten sette var olan bir elemanla karşılaşırsanız, bir kopya (duplicate) buldunuz demektir. Alternatif olarak, referans havuzunu (örneğin mücevherleri) bir sette tutup, hedef elemanları bu sete karşı $O(1)$ sürede kontrol edebilirsiniz.
+* **Ne zaman kullanılır:** Bir elemanın havuzda *var olup olmadığını* bilmeniz yeterliyse ve sayılara veya indekslere ihtiyacınız yoksa.
+* **Repo Örnekleri:**
+  * [0217-Contains Duplicate](./0217-Contains%20Duplicate)
+  * [0771-Jewels and Stones](./0771-Jewels%20and%20Stones)
 
-**Hash Map (`dict`)**
-* Bir anahtarı belirli bir değere bağlayan eşleme tablosudur.
-* **Cevapladığı Soru:** *"Bu eleman var mı, varsa ona bağlı veri (adet, indeks vb.) nedir?"*
-* **Kullanım Senaryosu (`0001-Two Sum`):** Tamamlayıcı sayının var olup olmadığını bilmek yetmez, orijinal dizideki **indeksini** de bulmanız gerekir. Bu yüzden veriyi eşlemeniz şarttır: `{"sayi": indeks}`.
+### 4. Gruplama ve İlişki Eşleme (Grouping & Mapping)
+* **Algoritma:** Ortak bir "imza" veya özellik bulmak için bir öğeyi işleyin (örneğin bir kelimedeki harfleri alfabetik sıraya dizmek). Bu imzayı Hash Map'te **Anahtar (Key)** olarak kullanın ve orijinal öğeyi o anahtara bağlı bir listenin (**Value**) içine ekleyin (`map[imza].append(öğe)`).
+* **Ne zaman kullanılır:** Ortak bir özelliği paylaşan elemanları (anagramlar gibi) gruplamada veya karakter değişim kurallarını (isomorphic strings) haritalamada.
+* **Repo Örnekleri:**
+  * [0049-Group Anagrams](./0049-Group%20Anagrams)
+
+---
 
 ## 💡 Profesyonel Detaylar ve İstisnai Durumlar
 
-* **Zaman-Alan Takası (Space-Time Trade-off):** Bu kalıbı uygulamak neredeyse her zaman Zaman Karmaşıklığını (Time Complexity) $O(n^2)$'den $O(n)$'e düşürür. Ancak hash tablosu için ekstra bellek ayırdığınızdan Alan Karmaşıklığı (Space Complexity) $O(n)$'e çıkar.
-* **Sadece Hashlenebilir Anahtarlar (Hashable Keys):** Python'da Map veya Set içinde anahtar (key) olarak yalnızca **değiştirilemez (immutable)** veri tiplerini (tam sayı, string veya tuple) kullanabilirsiniz. Liste (list) veya başka bir sözlük (dict) anahtar olarak kullanılamaz.
+* **Alan-Zaman Takası (Space-Time Trade-off):** Bu kalıbı uygulamak neredeyse her zaman Zaman Karmaşıklığını (Time Complexity) $O(n^2)$ veya $O(n \log n)$'den $O(n)$'e düşürür. Ancak, hash tablosu için ekstra bellek ayırdığınız için Alan Karmaşıklığı (Space Complexity) $O(n)$ seviyesine çıkar.
+* **Sadece Hashlenebilir Anahtarlar:** Python'da bir Map veya Set içinde Anahtar (Key) olarak yalnızca **değiştirilemez (immutable)** veri türlerini (tam sayılar, stringler veya tuple'lar) kullanabilirsiniz. Listeler veya diğer sözlükler gibi değiştirilebilir (mutable) türler hashlenemez (hata verir).
