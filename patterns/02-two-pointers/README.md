@@ -1,36 +1,49 @@
-> 📌 **Guide:** This directory covers the logic and practical applications of the **Two Pointers** pattern.
-> * **Theoretical Logic:** Read this `README.md` for core principles and time/space complexity analysis.
-> * **Practical Problems:** Navigate to the specific problem folders (e.g., `0167-Two Sum II - Input Array Is Sorted`) to see the pattern in action.
+> 📌 **Guide:** This directory serves as a Concept Map for the **Two Pointers** pattern.
+> * **Theoretical Logic:** Read this `README.md` for core principles, sub-variations, and time/space complexity analysis.
+> * **Practical Problems:** Navigate to the specific problem folders (e.g., `0167-Two Sum II - Input Array Is Sorted`) to see the pattern in action. Specific edge cases and alternative solutions are documented inside those folders.
 
 ## What is the Two Pointers Pattern?
 
-* **Definition:** An algorithmic technique that uses two variables (pointers or indices) to iterate through a data structure (usually an array or string) simultaneously. 
-* **The Core Superpower:** It optimizes algorithms by replacing nested loops (`O(n²)`) with a single concurrent pass (`O(n)`). Crucially, it achieves this while maintaining a strict `O(1)` space complexity because it only requires two integer variables, completely avoiding extra memory allocation like Hash Maps.
+* **Definition:** An algorithmic technique that uses two (or sometimes three) variables to iterate through a data structure simultaneously. 
+* **The Core Superpower:** It optimizes algorithms by replacing nested loops (`O(n²)`) with a single concurrent pass (`O(n)`). Crucially, it achieves this while maintaining a strict `O(1)` space complexity because it only requires integer variables, completely avoiding extra memory allocation.
 
-## When to Use It? (Indicators & Repository Examples)
+---
 
-1. **Sorted Arrays & Target Finding:** *"Find a pair that sums to a specific value."*
-   * *Example (`0167-Two Sum II`):* By placing one pointer at the start and one at the end of a sorted array, you can conditionally shrink the search space based on whether the current sum is too large or too small.
+## Core Variations & Algorithmic Strategies
 
-2. **Symmetry & Palindromes:** *"Does this read the same forwards and backwards?"*
-   * *Example (`0125-Valid Palindrome`):* Start pointers at both ends and move them inward. If they ever point to different characters, the sequence is not a palindrome. 
+The "Two Pointers" pattern is not a single strict rule; it has several specialized sub-variations depending on the problem's objective.
 
-3. **In-Place Array Modifications:** *"Remove duplicates without using extra memory."*
-   * *Example (`0026-Remove Duplicates from Sorted Array`):* Use a "Slow" pointer to track the position of the last unique element, and a "Fast" pointer to scan for the next new element, modifying the array directly.
+### 1. Opposite Ends (Left & Right Pointers)
+* **Algorithm:** Place one pointer at the start (`left = 0`) and another at the end (`right = len - 1`) of the array. Evaluate the condition, then move the pointers inward (e.g., `left += 1` or `right -= 1`) until they meet (`while left < right`).
+* **When to use it:** Finding pairs in a **sorted** array, checking symmetry (palindromes), or comparing extremes.
+* **Key Requirement:** For sum/search problems, the array **must** be sorted.
+* **Repository Examples:**
+  * [0167-Two Sum II - Input Array Is Sorted](./0167-Two%20Sum%20II%20-%20Input%20Array%20Is%20Sorted)
+  * [0125-Valid Palindrome](./0125-Valid%20Palindrome)
+  * [0011-Container With Most Water](./0011-Container%20With%20Most%20Water)
 
-## Opposite Ends vs. Same Direction: Which One to Choose?
+### 2. Same Direction (Fast & Slow Pointers)
+* **Algorithm:** Both pointers start at `index 0`. The `fast` pointer iterates through the array at every step to scan elements. The `slow` pointer only moves when a specific condition is met, keeping track of the position where the next valid element should be placed.
+* **When to use it:** Modifying arrays in-place (removing duplicates/zeros) or detecting cycles (Floyd's Cycle Finding).
+* **Repository Examples:**
+  * [0026-Remove Duplicates from Sorted Array](./0026-Remove%20Duplicates%20from%20Sorted%20Array)
+  * [0283-Move Zeroes](./0283-Move%20Zeroes)
 
-**Left & Right Pointers (Opposite Direction)**
-* Pointers start at `index 0` and `index len - 1` and move towards the center until they meet (`left < right`).
-* **The Question it Answers:** *"How do the extremes of this sequence relate to each other?"*
-* **Use Case:** Sorted arrays (Two Sum II), reversing a string, or palindrome checks.
+### 3. Pivot + Two Pointers (3Sum / k-Sum)
+* **Algorithm:** When you need to find a triplet, combining an outer loop with inner Two Pointers reduces the complexity from `O(n³)` to `O(n²)`. Fix one element using a `for` loop (the pivot), and use the **Opposite Ends** technique for the remaining subarray to find the other two elements.
+* **When to use it:** Finding triplets or quadruplets that sum to a specific target.
+* **Repository Examples:**
+  * [0015-3Sum](./0015-3Sum)
 
-**Slow & Fast Pointers (Same Direction)**
-* Both pointers start at `index 0`. The Fast pointer moves every step, while the Slow pointer only moves when a specific condition is met.
-* **The Question it Answers:** *"How can I filter, shift, or detect cycles in this data as I read it?"*
-* **Use Case:** Removing duplicates in-place, moving zeros to the end, or finding the middle of a Linked List.
+### 4. Partitioning / Three Pointers (Dutch National Flag)
+* **Algorithm:** Used to segregate an array into three distinct zones (e.g., 0s, 1s, and 2s). It uses three pointers: `low` tracks the boundary of the first group, `high` tracks the boundary of the third group, and `mid` scans the array. Elements are swapped in-place, achieving `O(n)` time and `O(1)` space in a single pass.
+* **When to use it:** Sorting arrays with a highly limited set of distinct values without using library sort functions.
+* **Repository Examples:**
+  * [0075-Sort Colors](./0075-Sort%20Colors)
+
+---
 
 ## 💡 Professional Details & Edge Cases
 
-* **The Sorted Prerequisite:** For Opposite Direction pointers to work effectively in search or sum problems, the data **must** be sorted. If the data is unsorted and you cannot sort it (which would take `O(n log n)`), you should likely use a Hash Map instead.
-* **Pointer Bounds (Index Out of Bounds):** Always ensure your loop condition (`while left < right` or `while fast < len(nums)`) strictly prevents pointers from crossing improperly or accessing indices outside the array bounds.
+* **Index Out of Bounds:** Always ensure your loop conditions (e.g., `while left < right` or `while mid <= high`) strictly prevent pointers from crossing improperly or accessing negative indices.
+* **Avoiding Duplicates:** When dealing with combinations (like 3Sum), you can avoid processing the same value twice by skipping adjacent identical numbers (`if nums[i] == nums[i-1]: continue`). This bypasses the need for an `O(n)` linear search to check for duplicates.
